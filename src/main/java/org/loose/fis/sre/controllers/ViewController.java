@@ -2,13 +2,16 @@ package org.loose.fis.sre.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.loose.fis.sre.exceptions.UsernameAlreadyExistsException;
+import org.loose.fis.sre.model.User;
 import org.loose.fis.sre.services.UserService;
 
 import java.io.IOException;
@@ -74,8 +77,15 @@ public class ViewController {
                 if (role.getValue().equals("Customer")) {
                     Stage registerWindow = new Stage();
                     Parent secondRoot = FXMLLoader.load(getClass().getClassLoader().getResource("viewservices.fxml"));
-                    registerWindow.setTitle("Login or Sign-Up Form!");
-                    registerWindow.setScene(new Scene(secondRoot, 1000, 700));
+                    registerWindow.setTitle("Services in your area");
+                    registerWindow.setScene(new Scene(secondRoot, 600, 400));
+                    registerWindow.show();
+                }
+                if (role.getValue().equals("Engineer")) {
+                    Stage registerWindow = new Stage();
+                    Parent secondRoot = FXMLLoader.load(getClass().getClassLoader().getResource("EngineerDashBoard.fxml"));
+                    registerWindow.setTitle("My appointments!");
+                    registerWindow.setScene(new Scene(secondRoot, 800, 600));
                     registerWindow.show();
                 }
             }
@@ -129,6 +139,27 @@ public class ViewController {
                 signUpPasswordPasswordField.setStyle(errorStyle);
                 signUpRepeatPasswordPasswordField.setStyle(errorStyle);
                 invalidLoginCredentials.setText("");
+            }
+        }
+
+        @FXML
+        private void sendData(MouseEvent event) {
+            User u = new User();
+
+            Node node = (Node) event.getSource();
+
+            Stage stage = (Stage) node.getScene().getWindow();
+            stage.close();
+
+            try {
+                Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("register.fxml"));
+
+                stage.setUserData(u);
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                System.err.println(String.format("Error: %s", e.getMessage()));
             }
         }
     }
